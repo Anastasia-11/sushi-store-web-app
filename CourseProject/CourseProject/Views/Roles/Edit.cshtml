@@ -1,0 +1,41 @@
+@model EditRoleViewModel
+<div class="nav-link text-dark"><h4>Редактировать роли пользователей</h4></div>
+<div asp-validation-summary="All" class="text-danger"></div>
+<form method="post" asp-controller="Roles" asp-action="Edit">
+    <div class="nav-link text-dark"><h5>Добавить к роли @Model.Role.Name</h5></div>
+    <ul class="list-group">
+        @if (!Model.NonMembers.Any())
+        {
+            <li class="list-group-item">Все пользователи в роли @Model.Role.Name</li>
+        }
+        else
+        {
+            @foreach (var user in Model.NonMembers)
+            {
+                <li class="list-group-item">
+                    <div class="nav-link text-dark">@user.UserName</div>
+                    <input type="checkbox" name="IdsToAdd" value="@user.Id">
+                </li>
+            }
+        }
+    </ul>
+
+    <div class="nav-link text-dark"><h5>Удалить из роли @Model.Role.Name</h5></div>
+    <ul class="list-group">
+    @if (!Model.Members.Any())
+    {
+        <li class="list-group-item">Ни один пользователь не находится в роли @Model.Role.Name</li>
+    }
+    else
+    {
+        @foreach(var user in Model.Members) {
+            <li class="list-group-item">
+                <div class="nav-link text-dark">@user.UserName</div>
+                <input type="checkbox" name="IdsToDelete" value="@user.Id">
+            </li>
+        }
+    }
+    </ul>
+    <button type="submit" class="btn btn-primary">Сохранить</button>
+    <a asp-action="Index" class="btn btn-secondary">Отмена</a>
+</form>
