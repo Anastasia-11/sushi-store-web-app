@@ -2,8 +2,10 @@
 <div class="nav-link text-dark"><h4>Редактировать роли пользователей</h4></div>
 <div asp-validation-summary="All" class="text-danger"></div>
 <form method="post" asp-controller="Roles" asp-action="Edit">
+    <input type="hidden" name="roleName" value="@Model.Role.Name" />
+    <input type="hidden" name="roleId" value="@Model.Role.Id" />
     <div class="nav-link text-dark"><h5>Добавить к роли @Model.Role.Name</h5></div>
-    <ul class="list-group">
+    <ul class="list-group list-group-flush">
         @if (!Model.NonMembers.Any())
         {
             <li class="list-group-item">Все пользователи в роли @Model.Role.Name</li>
@@ -13,15 +15,15 @@
             @foreach (var user in Model.NonMembers)
             {
                 <li class="list-group-item">
-                    <div class="nav-link text-dark">@user.UserName</div>
                     <input type="checkbox" name="IdsToAdd" value="@user.Id">
+                    @user.UserName
                 </li>
             }
         }
     </ul>
 
     <div class="nav-link text-dark"><h5>Удалить из роли @Model.Role.Name</h5></div>
-    <ul class="list-group">
+    <ul class="list-group list-group-flush">
     @if (!Model.Members.Any())
     {
         <li class="list-group-item">Ни один пользователь не находится в роли @Model.Role.Name</li>
@@ -30,8 +32,8 @@
     {
         @foreach(var user in Model.Members) {
             <li class="list-group-item">
-                <div class="nav-link text-dark">@user.UserName</div>
                 <input type="checkbox" name="IdsToDelete" value="@user.Id">
+                @user.UserName
             </li>
         }
     }

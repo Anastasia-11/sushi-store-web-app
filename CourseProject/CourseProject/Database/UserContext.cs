@@ -1,6 +1,11 @@
-﻿using CourseProject.Models;
+﻿using System;
+using System.Threading.Tasks;
+using CourseProject.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CourseProject.Database
 {
@@ -13,6 +18,47 @@ namespace CourseProject.Database
         public UserContext(DbContextOptions<UserContext> options)
             : base(options)
         {
+        }
+
+        public static async Task CreateAdminAccount(IServiceProvider serviceProvider, IConfiguration configuration)
+        {
+            string userName = configuration["Data:AdminUser:UserName"];
+            string email = configuration["Data:AdminUser:Email"];
+            string phoneNumber = configuration["Data:AdminUser:PhoneNumber"];
+            string password = configuration["Data:AdminUser:Password"];
+            string role = configuration["Data:AdminUser:Role"];
+            UserManager<User> userManager = serviceProvider.GetRequiredService<UserManager<User>>();
+            RoleManager<IdentityRole> roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            if (await userManager.FindByNameAsync(userName) == null)
+            {
+                User user = new User
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    UserName = userName,
+                    Email = email,
+                    PhoneNumber = phoneNumber,
+                };
+
+                IdentityResult result = await userManager.CreateAsync(user, password);
+                if (result.Succeeded)
+                {
+                    if (await roleManager.FindByNameAsync(role) == null)
+                    {
+                        await roleManager.CreateAsync(new IdentityRole(role));
+                    }
+
+                    await userManager.AddToRoleAsync(user, role);
+                }
+            }
+            else
+            {
+                User user = await userManager.FindByNameAsync(userName);
+                if (await roleManager.FindByNameAsync(role) == null)
+                {
+                    await roleManager.CreateAsync(new IdentityRole(role));
+                }
+                await userManager.AddToRoleAsync(user, role);
+            }
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

@@ -1,25 +1,21 @@
 ﻿@model IEnumerable<Microsoft.AspNetCore.Identity.IdentityRole>
 <div class="nav-link text-dark"><h4>Список ролей</h4></div>
 <div class="text-danger" asp-validation-summary="ModelOnly"></div>
-<ul class="list-group">
-    @if (!Model.Any())
+@if (!Model.Any())
+{
+    <li class="list-group-item">Ролей нет</li>
+}
+else
+{
+    foreach (var role in Model)
     {
-        <li class="list-group-item">Ролей нет</li>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+                @role.Name
+                <a class="btn btn-sm btn-primary" asp-route-id="@role.Id" asp-controller="Roles" asp-action="Edit">Редактировать</a>
+                <a class="btn btn-sm btn-danger" asp-route-id="@role.Id" asp-controller="Roles" asp-action="Delete">Удалить</a>
+            </li>
+        </ul>
     }
-    else
-    {
-        foreach (var role in Model)
-        {
-            <ul>
-                <li class="list-group-item">@role.Name</li>
-                <li class="list-group-item">
-                    <a class="btn btn-sm btn-danger" asp-route-id="@role.Id" asp-controller="Roles" asp-action="Delete">Удалить</a>
-                </li>
-                <li class="list-group-item">
-                    <a class="btn btn-sm btn-primary" asp-route-id="@role.Id" asp-controller="Roles" asp-action="Edit">Редактировать</a>
-                </li>
-            </ul>
-        }
-    }
-</ul>
+}
 <a class="btn btn-sm btn-primary" asp-controller="Roles" asp-action="Create">Create</a>
