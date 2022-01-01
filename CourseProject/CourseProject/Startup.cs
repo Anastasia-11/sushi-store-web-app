@@ -62,7 +62,7 @@ namespace CourseProject
                     pattern: "{controller=Product}/{action=Index}/{id?}");
             });
             UserContext.CreateAdminAccount(app.ApplicationServices, Configuration).Wait();
-            InitStore.AddProducts(app);
+            InitStore.AddProductsJson(app);
         }
     }
 }
