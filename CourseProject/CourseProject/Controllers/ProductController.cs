@@ -1,22 +1,23 @@
 ﻿using System.Diagnostics;
+using CourseProject.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using CourseProject.ViewModels;
 
 namespace CourseProject.Controllers
 {
-    public class HomeController : Controller
+    public class ProductController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private IProductService _productService;
 
-        public HomeController(ILogger<HomeController> logger)
+        public ProductController(IProductService productService)
         {
-            _logger = logger;
+            _productService = productService;
         }
 
         public IActionResult Index()
         {
-            return View();
+            return View(_productService.GetAll());
         }
 
         public IActionResult Privacy()

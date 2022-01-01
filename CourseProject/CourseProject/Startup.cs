@@ -1,5 +1,6 @@
 using CourseProject.Database;
 using CourseProject.Models;
+using CourseProject.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -25,7 +26,11 @@ namespace CourseProject
             // todo change name of the connection string 
             services.AddDbContext<UserContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
- 
+            
+            services.AddDbContext<ApplicationContext>(options =>
+                options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddTransient<IProductService, ProductService>();
+            
             services.AddIdentity<User, IdentityRole>(options => options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789абвгдеёжзиклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ")
                 .AddEntityFrameworkStores<UserContext>().AddDefaultTokenProviders();
         }
@@ -38,7 +43,7 @@ namespace CourseProject
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler("/Shared/Error");
                 app.UseHsts();
             }
 
@@ -54,9 +59,10 @@ namespace CourseProject
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Product}/{action=Index}/{id?}");
             });
             UserContext.CreateAdminAccount(app.ApplicationServices, Configuration).Wait();
+            InitStore.AddProducts(app);
         }
     }
 }

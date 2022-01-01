@@ -39,7 +39,7 @@ namespace CourseProject.Controllers
                 if (result.Succeeded)
                 {
                     await _signInManager.SignInAsync(user, false);
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Product");
                 }
                 else
                 {
@@ -78,7 +78,7 @@ namespace CourseProject.Controllers
                             return Redirect(model.ReturnUrl);
                         }
 
-                        return RedirectToAction("Index", "Home");
+                        return RedirectToAction("Index", "Product");
                     }
                 }
                 ModelState.AddModelError("", "Неправильный логин или пароль");
@@ -91,7 +91,7 @@ namespace CourseProject.Controllers
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Product");
         }
 
         [AllowAnonymous]

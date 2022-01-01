@@ -1,0 +1,12 @@
+﻿@model IQueryable<CourseProject.Models.Product>
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<ul>
+    @foreach(var product in Model)
+    {
+        <li>@product.Name</li>
+    }
+</ul>

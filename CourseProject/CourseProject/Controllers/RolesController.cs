@@ -12,13 +12,15 @@ namespace CourseProject.Controllers
     [Authorize (Roles = "admin")]
     public class RolesController : Controller
     {
-        RoleManager<IdentityRole> _roleManager;
-        UserManager<User> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
         
-        public RolesController(RoleManager<IdentityRole> roleManager, UserManager<User> userManager)
+        public RolesController(RoleManager<IdentityRole> roleManager, UserManager<User> userManager, SignInManager<User> signInManager)
         {
             _roleManager = roleManager;
             _userManager = userManager;
+            _signInManager = signInManager;
         }
         public IActionResult Index() => View(_roleManager.Roles.ToList());
  
@@ -66,6 +68,7 @@ namespace CourseProject.Controllers
                             AddModelErrors(result);
                     }
                 }
+                await _signInManager.RefreshSignInAsync(_userManager.GetUserAsync(HttpContext.User).Result);
             }
             if (ModelState.IsValid)
                 return RedirectToAction(nameof(Index));
@@ -88,7 +91,7 @@ namespace CourseProject.Controllers
                     nonMembers.Add(user);
                 }
             }
-
+            
             return View(new EditRoleViewModel
             {
                 Role = role,
