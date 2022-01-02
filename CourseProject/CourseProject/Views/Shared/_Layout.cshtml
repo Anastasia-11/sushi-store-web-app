@@ -36,12 +36,17 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="Index">@User.Identity.Name</a>
                         </li>
                         <li class="nav-item" style="margin-left: auto; margin-right: 0">
+                            <a class="navbar-brand" asp-area="" asp-controller="Product" asp-action="Privacy">
+                                <img src="~/assets/shopping-cart.png" alt="..." height="25"/>
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Logout">Выход</a>
                         </li>
                     }
                     else
                     {
-                        <li class="nav-item">
+                        <li class="nav-item" style="margin-left: auto; margin-right: 0">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">Вход</a>
                         </li>
                         <li class="nav-item">
